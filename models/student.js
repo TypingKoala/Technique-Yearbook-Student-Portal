@@ -35,6 +35,9 @@ var StudentSchema = new mongoose.Schema({
         type: String,
         unique: true,
         default: crypto.randomBytes(32).toString('hex')
+    },
+    portraitURL: {
+        type: String
     }
 
 });

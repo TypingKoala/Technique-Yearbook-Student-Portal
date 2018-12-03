@@ -62,7 +62,8 @@ html
         }
       }
     link(href='/style.css', rel='stylesheet')
-    script(type='text/javascript', src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+    link(href='/assets/css/longpress.css', rel='stylesheet')
+    script(type='text/javascript', src='http://code.jquery.com/jquery-1.10.2.min.js')
   body.app
     #loader
       .spinner
@@ -85,3 +86,10 @@ html
             | Made with ❤ by <a href="https://johnnybui.com">Johnny Bui</a>.
     script(type='text/javascript', src='/vendor.js')
     script(type='text/javascript', src='/bundle.js')
+    script(type='text/javascript', src='/assets/js/jquery.mousewheel.js')
+    script(type='text/javascript', src='/assets/js/plugins.js')
+    script(type='text/javascript', src='/assets/js/jquery.longpress.js')
+    script.
+      $(function(){
+        $('.long-press').first().longPress();
+      });

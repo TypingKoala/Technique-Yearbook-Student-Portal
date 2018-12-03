@@ -7,33 +7,62 @@
                 h1.display-4 Thanks #{user.fname}! Your yearbook entry is confirmed!
             hr.my-4
             if (!user.confirmed)
-                p Welcome to the MIT Technique Student Portal! Please confirm the accuracy of the information below:
+                p Please ensure that your yearbook entry is accurate. You can make changes by clicking the "Edit" button, or use the "Confirm" button to confirm the information
             else
                 p You have already confirmed the information below. You can make changes until the deadline.
             br
-            table.table.table-striped.table-hover(cellspacing='0', width='100%')
-                tbody
-                    tr
-                        th First Name
-                        td #{fname}
-                    tr
-                        th Last Name
-                        td #{lname}
-                    tr
-                        th Name As It Would Appear In The Yearbook
-                        td #{nameAsAppears}
-                    tr
-                        th Major
-                        td #{major}
-                    tr
-                        th Second Major (for double-majors)
-                        td #{major2}
-                    tr
-                        th Minor
-                        td #{minor}
-                    tr
-                        th Quote
-                        td #{quote}
+            //- table.table.table-striped.table-hover(cellspacing='0', width='100%')
+            //-     tbody
+            //-         tr
+            //-             th First Name
+            //-             td #{fname}
+            //-         tr
+            //-             th Last Name
+            //-             td #{lname}
+            //-         tr
+            //-             th Name As It Would Appear In The Yearbook
+            //-             td #{nameAsAppears}
+            //-         tr
+            //-             th Major
+            //-             td #{major}
+            //-         tr
+            //-             th Second Major (for double-majors)
+            //-             td #{major2}
+            //-         tr
+            //-             th Minor
+            //-             td #{minor}
+            //-         tr
+            //-             th Quote
+            //-             td #{quote}
+            form
+                .form-group.row
+                    label.col-sm-2.col-form-label(for='fname') First Name
+                    .col-sm-10
+                        input.form-control#fname.form-control-plaintext(name='fname' readonly value=`${user.fname}`)
+                .form-group.row
+                    label.col-sm-2.col-form-label(for='lname') Last Name
+                    .col-sm-10
+                        input.form-control#lname.form-control-plaintext(name='lname' readonly value=`${user.lname}`)
+                .form-group.row
+                    label.col-sm-2.col-form-label(for='nameAsAppears') Name To Appear in the Yearbook
+                    .col-sm-10
+                        input.form-control#nameAsAppears.long-press.form-control-plaintext(name='nameAsAppears' readonly value=`${user.nameAsAppears}`)
+                .form-group.row
+                    label.col-sm-2.col-form-label(for='major') Major
+                    .col-sm-10
+                        input.form-control#major.form-control-plaintext(name='major' readonly value=`${user.major}`)
+                .form-group.row
+                    label.col-sm-2.col-form-label(for='major2') Second Major (for double majors)
+                    .col-sm-10
+                        input.form-control#major2.form-control-plaintext(name='major2' readonly value=`${user.major2}`)
+                .form-group.row
+                    label.col-sm-2.col-form-label(for='minor') Minor
+                    .col-sm-10
+                        input.form-control#minor.form-control-plaintext(name='minor' readonly value=`${user.minor}`)
+                .form-group.row
+                    label.col-sm-2.col-form-label(for='quote') Quote
+                    .col-sm-10
+                        textarea.form-control#quote.form-control-plaintext(name='quote' readonly value=`${user.quote}` maxlength='130')
             form(action="/edit" method="get")
                 button.btn.btn-secondary(type="submit") Edit
             if (!user.confirmed)
