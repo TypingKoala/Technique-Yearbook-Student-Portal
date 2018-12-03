@@ -1,0 +1,33 @@
+.masonry-item.col-md-12
+    .bgc-white.p-20.bd
+        h6.c-grey-900 Edit
+        .mT-30
+            if (failure != "")
+                .alert.alert-danger(role='alert') #{failure}
+            form(method="post" action="/edit")
+                .form-group
+                label(for='fname') First Name
+                input.form-control#fname(name='fname' value=`${user.fname}`)
+                .form-group
+                label(for='lname') Last Name
+                input.form-control#lname(name='lname' value=`${user.lname}`)
+                small#lnameHelpBlock.form-text.text-muted This is how your name will be sorted in the yearbook.
+                .form-group
+                label(for='nameAsAppears') Name To Appear in the Yearbook
+                input.form-control#nameAsAppears(name='nameAsAppears' value=`${user.nameAsAppears}`)
+                small#nameAsAppearsHelpBlock.form-text.text-muted This will be the name printed in the yearbook.
+                .form-group
+                label(for='major') Major
+                input.form-control#major(name='major' value=`${user.major}`)
+                .form-group
+                label(for='major2') Second Major (for double majors)
+                input.form-control#major2(name='major2' value=`${user.major2}`)
+                .form-group
+                label(for='minor') Minor
+                input.form-control#minor(name='minor' value=`${user.minor}`)
+                .form-group
+                label(for='quote') Quote
+                input.form-control#quote(name='quote' value=`${user.quote}` maxlength='130')
+                small#quoteHelpBlock.form-text.text-muted Please limit your quote to 130 characters.
+                .form-group
+                button.btn.btn-primary(type='submit') Submit

@@ -1,0 +1,42 @@
+.row
+    .col-md-12
+        .jumbotron
+            if (!user.confirmed)
+                h1.display-4 Hello #{user.fname}! Action is required below!
+            else
+                h1.display-4 Thanks #{user.fname}! Your yearbook entry is confirmed!
+            hr.my-4
+            if (!user.confirmed)
+                p Welcome to the MIT Technique Student Portal! Please confirm the accuracy of the information below:
+            else
+                p You have already confirmed the information below. You can make changes until the deadline.
+            br
+            table.table.table-striped.table-hover(cellspacing='0', width='100%')
+                tbody
+                    tr
+                        th First Name
+                        td #{fname}
+                    tr
+                        th Last Name
+                        td #{lname}
+                    tr
+                        th Name As It Would Appear In The Yearbook
+                        td #{nameAsAppears}
+                    tr
+                        th Major
+                        td #{major}
+                    tr
+                        th Second Major (for double-majors)
+                        td #{major2}
+                    tr
+                        th Minor
+                        td #{minor}
+                    tr
+                        th Quote
+                        td #{quote}
+            form(action="/edit" method="get")
+                button.btn.btn-secondary(type="submit") Edit
+            if (!user.confirmed)
+                form(action="/confirm" method="post")
+                    .form-group
+                    button.btn.btn-primary(type="submit") Confirm
