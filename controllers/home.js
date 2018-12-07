@@ -9,14 +9,7 @@ app.get('/', (req, res, next) => {
     if (req.user) {
         res.render('home', {
             user: req.user,
-            title: 'Home',
-            fname: xssFilters.inHTMLData(req.user.fname),
-            lname: xssFilters.inHTMLData(req.user.lname),
-            nameAsAppears: xssFilters.inHTMLData(req.user.nameAsAppears),
-            major: xssFilters.inHTMLData(req.user.major),
-            major2: xssFilters.inHTMLData(req.user.major2),
-            minor: xssFilters.inHTMLData(req.user.minor),
-            quote: req.user.quote
+            title: 'Home'
         }, (err) => {
             if (err) {
                 console.log(err.message);
