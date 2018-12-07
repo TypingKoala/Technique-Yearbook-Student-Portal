@@ -1,19 +1,13 @@
 /* jshint esversion: 6*/
 const express = require('express');
 const app = express.Router();
-const Student = require('../models/student.js');
-var xssFilters = require('xss-filters');
 
 
-app.get('/', (req, res, next) => {
+app.get('/', (req, res) => {
     if (req.user) {
         res.render('home', {
-            user: req.user,
-            title: 'Home'
-        }, (err) => {
-            if (err) {
-                console.log(err.message);
-            }
+            title: 'Home',
+            user: req.user
         })
     } else {
         res.redirect('/signin')

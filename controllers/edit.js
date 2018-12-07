@@ -4,7 +4,7 @@ const app = express.Router();
 const Student = require('../models/student.js');
 const { check, validationResult } = require('express-validator/check');
 
-app.get('/edit', (req, res, next) => {
+app.get('/edit', (req, res) => {
     if (req.user) {
         res.render('edit', {
             title: 'Edit',
