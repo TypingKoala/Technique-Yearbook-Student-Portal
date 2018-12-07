@@ -17,6 +17,10 @@ app.get('/', (req, res, next) => {
             major2: xssFilters.inHTMLData(req.user.major2),
             minor: xssFilters.inHTMLData(req.user.minor),
             quote: req.user.quote
+        }, (err) => {
+            if (err) {
+                console.log(err.message);
+            }
         })
     } else {
         res.redirect('/signin')
