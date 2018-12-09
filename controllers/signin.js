@@ -18,7 +18,10 @@ app.get('/signin', (req, res) => {
 
 // MIT OIDC endpoint and callback url
 // oidc request
-app.get('/auth', passport.authenticate('oidc'));
+app.get('/auth', passport.authenticate('oidc', {
+    failureRedirect: '/signin',
+    failureFlash: true
+}));
 
 // oidc authentication callback
 app.get('/auth/cb', passport.authenticate('oidc', {
@@ -27,9 +30,7 @@ app.get('/auth/cb', passport.authenticate('oidc', {
 }), (req, res) => {
     // Wait until session saves before redirecting
     req.session.save(() => {
-        var redirect = req.session.redirectAfterLogin || '/';
-        req.session.redirectAfterLogin = "";
-        res.redirect(redirect);
+        res.redirect(301 ,'/');
     });
 });
 

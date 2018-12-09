@@ -36,12 +36,16 @@ app.use(helmet());
 
 // Initialize Express-Flash
 const flash = require('express-flash');
+
+// Initialize Express-Session
 app.use(session({ 
     secret: process.env.mongoStoreSecret,
     cookie: { maxAge: 60000 },
     resave: false,
     saveUninitialized: false
 }));
+
+// Use flash middleware1qw
 app.use(flash());
 
 // Configure Passport
