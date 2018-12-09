@@ -12,6 +12,10 @@ if (result.error) {
 
 // Variables
 const port = process.env.PORT || 3000;
+if (!process.env.FQDN) {
+    throw new Error('FQDN not specified');
+}
+
 
 // Initialize express
 const express = require('express');
@@ -45,5 +49,5 @@ app.use(function onError(err, req, res, next) {
 
 // Start Server
 app.listen(port, () => {
-    console.log('The magic happens on port ' + port + '.');
+    console.log('The magic happens at http://'+ process.env.FQDN + ':' + port + '.');
 });

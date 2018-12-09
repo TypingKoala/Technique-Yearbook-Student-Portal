@@ -10,6 +10,7 @@ var session = require('express-session');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
+const path = require('path');
 
 // Require and Initialize Sessions & MongoStore
 const MongoStore = require('connect-mongo')(session);
@@ -73,14 +74,8 @@ console.log('Set up client MIT');
 const {
     Strategy
 } = require('openid-client');
-
-
-// Set up redirect_uri based on Node Environment
-if (process.env.NODE_ENV === 'production') {
-    var redirect_uri = 'https://tnqportal.mit.edu/auth/cb';
-} else {
-    var redirect_uri = 'http://localhost:3000/auth/cb';
-}
+// Set up redirect_uri based on FQDN
+var redirect_uri = 'http://'+ process.env.FQDN + ':' + process.env.PORT + '/oidc/callback';
 // Parameters for OIDC
 const params = {
     scope: "email,profile,openid",
@@ -138,8 +133,11 @@ app.get('/signout', (req, res) => {
 
 // 404
 app.use((req, res, next) => {
-    res.status = 404;
-    res.sendfile('/public/404.html');
+    res.sendFile('404.html', {root: path.resolve(__dirname, '../public/')}, (err) => {
+        if (err) {
+            console.log(err.message)
+        }
+    });
 });
 
 module.exports = app;
