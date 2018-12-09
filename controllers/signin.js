@@ -21,7 +21,7 @@ app.get('/signin', (req, res) => {
 app.get('/auth', passport.authenticate('oidc'));
 
 // oidc authentication callback
-app.get('/oidc/callback', passport.authenticate('oidc', {
+app.get('/auth/cb', passport.authenticate('oidc', {
     failureRedirect: '/signin',
     failureFlash: true
 }), (req, res) => {

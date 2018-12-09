@@ -69,11 +69,13 @@ console.log('Set up client MIT');
 const {
     Strategy
 } = require('openid-client');
+
+
 // Set up redirect_uri based on Node Environment
 if (process.env.NODE_ENV === 'production') {
-    var redirect_uri = 'https://tnqportal.johnnybui.com/oidc/callback';
+    var redirect_uri = 'https://tnqportal.mit.edu/auth/cb';
 } else {
-    var redirect_uri = 'http://localhost:3000/oidc/callback';
+    var redirect_uri = 'http://localhost:3000/auth/cb';
 }
 // Parameters for OIDC
 const params = {
@@ -92,7 +94,7 @@ passport.use('oidc', new Strategy({
             if (err) return done(err, false, { message: "A server error occured. "});
             if (!user) {
                 console.log('User not found: ' + userinfo.email);
-                return done(null, false, { message: 'Unable to find yearbook entry linked to your email address.' });
+                return done(null, false, { message: 'We were unable to verify that you are a senior. Please contact support.' });
             } else {
                 return done(null, user);
             }
@@ -100,7 +102,7 @@ passport.use('oidc', new Strategy({
     } else {
         // If userinfo.email is not defined, then user has not given appropriate permissions
         console.log('Appropriate permissions not given.');
-        return done('Appropriate permissions not given.');
+        return done(null, false, { message: 'You did not give the application permission to view your email. Please contact support.' });
     }
 }));
 
