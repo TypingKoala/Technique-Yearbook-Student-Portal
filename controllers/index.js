@@ -75,7 +75,7 @@ const {
     Strategy
 } = require('openid-client');
 // Set up redirect_uri based on FQDN
-var redirect_uri = 'http://'+ process.env.FQDN + ':' + process.env.PORT + '/oidc/callback';
+var redirect_uri = 'http://'+ process.env.FQDN + ':' + process.env.PORT + '/auth/cb';
 // Parameters for OIDC
 const params = {
     scope: "email,profile,openid",
