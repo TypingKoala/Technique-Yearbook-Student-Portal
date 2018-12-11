@@ -39,7 +39,7 @@
                 .form-group.row
                     label.col-sm-2.col-form-label(for='quote') Quote
                     .col-sm-10
-                        textarea.form-control#quote.form-control-plaintext(name='quote' readonly value=`${user.quote}` maxlength='130')
+                        textarea.form-control#quote.form-control-plaintext(name='quote' readonly maxlength='130') #{user.quote}
             form(action="/edit" method="get")
                 button.btn.btn-secondary(type="submit") Edit
             if (!user.confirmed)

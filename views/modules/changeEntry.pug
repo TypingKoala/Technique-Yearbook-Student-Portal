@@ -29,7 +29,7 @@
                 input.form-control#minor(name='minor' value=`${user.minor}`)
                 .form-group
                 label(for='quote') Quote
-                textarea.form-control#quote(name='quote' value=`${user.quote}` maxlength='130')
+                textarea.form-control#quote(name='quote' maxlength='130') #{user.quote}
                 small#quoteHelpBlock.form-text.text-muted Please limit your quote to 130 characters.
                 .form-group
                 button.btn.btn-primary(type='submit') Save Changes
