@@ -43,6 +43,7 @@
     "openid-client": "^2.4.5",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "passport-magic-link": "^1.0.5",
     "pug": "^2.0.3",
     "xss-filters": "^1.2.7"
   }

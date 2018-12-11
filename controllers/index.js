@@ -39,9 +39,11 @@ app.use(helmet());
 const flash = require('express-flash');
 
 // Initialize Express-Session
-app.use(session({ 
+app.use(session({
     secret: process.env.mongoStoreSecret,
-    cookie: { maxAge: 60000 },
+    cookie: {
+        maxAge: 60000
+    },
     resave: false,
     saveUninitialized: false
 }));
@@ -75,7 +77,7 @@ const {
     Strategy
 } = require('openid-client');
 // Set up redirect_uri based on FQDN
-var redirect_uri = 'http://'+ process.env.FQDN + ':' + process.env.PORT + '/auth/cb';
+var redirect_uri = 'http://' + process.env.FQDN + ':' + process.env.PORT + '/auth/cb';
 // Parameters for OIDC
 const params = {
     scope: "email,profile,openid",
@@ -90,10 +92,14 @@ passport.use('oidc', new Strategy({
         Student.findOne({
             email: userinfo.email
         }, function (err, user) {
-            if (err) return done(err, false, { message: "A server error occured. "});
+            if (err) return done(err, false, {
+                message: "A server error occured. "
+            });
             if (!user) {
                 console.log('User not found: ' + userinfo.email);
-                return done(null, false, { message: 'We were unable to verify that you are a senior. Please contact support.' });
+                return done(null, false, {
+                    message: 'We were unable to verify that you are a senior. Please contact support.'
+                });
             } else {
                 return done(null, user);
             }
@@ -101,9 +107,32 @@ passport.use('oidc', new Strategy({
     } else {
         // If userinfo.email is not defined, then user has not given appropriate permissions
         console.log('Appropriate permissions not given.');
-        return done(null, false, { message: 'You did not give the application permission to view your email. Please contact support.' });
+        return done(null, false, {
+            message: 'You did not give the application permission to view your email. Please contact support.'
+        });
     }
 }));
+
+// Configure Magic Links
+const MagicLinkStrategy = require('passport-magic-link').Strategy
+const email = require('./email');
+
+passport.use(new MagicLinkStrategy({
+    secret: process.env.magicLinksSecret,
+    userFields: ['email'],
+    tokenField: 'token'
+}, (user, token) => {
+    return email({
+        from: '"MIT Technique" technique@mit.edu',
+        to: user.email,
+        subject: 'Login to the Technique Portal',
+        html: 'Please use this link to access the Technique portal: ' + '<a href="http://' + process.env.FQDN + '/auth/magiclink/callback?token=' + token + '"> Access Portal </a>' 
+    })
+}, (user) => {
+    return Student.findOne({
+        email: user.email
+    })
+}))
 
 
 // Serialize and Deserialize Passport Sessions
@@ -133,7 +162,9 @@ app.get('/signout', (req, res) => {
 
 // 404
 app.use((req, res, next) => {
-    res.sendFile('404.html', {root: path.resolve(__dirname, '../public/')}, (err) => {
+    res.sendFile('404.html', {
+        root: path.resolve(__dirname, '../public/')
+    }, (err) => {
         if (err) {
             console.log(err.message)
         }
