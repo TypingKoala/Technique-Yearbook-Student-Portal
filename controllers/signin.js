@@ -46,13 +46,14 @@ app.get('/auth/magiclink',
     (req, res) => {
         req.flash('success', 'Please check your inbox for your magic link.');
         res.redirect('/signin');
-
     }
 )
 
 app.get('/auth/magiclink/callback',
   passport.authenticate('magiclink', { action : 'acceptToken' }),
-  (req, res) => res.redirect('/')
+  (req, res) =>{
+      res.redirect('/');
+    }
 )
 
 

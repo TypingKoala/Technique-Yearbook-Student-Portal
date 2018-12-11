@@ -10,7 +10,7 @@ app.get('/edit', (req, res) => {
             title: 'Edit',
             user: req.user,
             failure: req.flash('failure'),
-        })
+        });
     } else {
         res.redirect('/signin')
     }
@@ -22,7 +22,7 @@ app.post('/edit', [
     check('nameAsAppears').trim().isString().not().isEmpty().withMessage('Your name to appear in the yearbook is required.'),
     check('major').trim().isString(),
     check('major2').trim().isString(),
-    check('minor').trim().isString().trim(),
+    check('minor').trim().isString(),
     check('quote').trim().isLength({min: 0, max: 130}).withMessage('Your quote must be less than 130 characters.')
 ], (req, res, next) => {
     if (req.user) {
