@@ -8,11 +8,19 @@ const app = express.Router();
 // Initialize Passport.js
 var passport = require('passport');
 
+// require the app secret decryption middleware
+const appSecret = require('../middlewares/cryptr').decryptAppSecret;
+
+// Initialize Express-Recaptcha
+var Recaptcha = require('express-recaptcha').Recaptcha;
+var recaptcha = new Recaptcha(appSecret('recaptchaSiteKey'), appSecret('recaptchaSecretKey'))
+
 // GET /signin
 app.get('/signin', (req, res) => {
     res.render('signin', {
         message: req.flash('error'),
-        success: req.flash('success')
+        success: req.flash('success'),
+        cache: true
     });
 });
 
@@ -35,26 +43,27 @@ app.get('/auth/cb', passport.authenticate('oidc', {
     });
 });
 
-app.get('/signin/magic', (req, res) => {
-    res.render('passwordless', {
-        title: 'Sign In'
-    })
-})
+// app.get('/signin/magic', (req, res) => {
+//     res.render('passwordless', {
+//         title: 'Sign In'
+//     })
+// })
 
-app.get('/auth/magiclink',
-    passport.authenticate('magiclink', { action : 'requestToken' }),
-    (req, res) => {
-        req.flash('success', 'Please check your inbox for your magic link.');
-        res.redirect('/signin');
-    }
-)
+// app.get('/auth/magiclink', recaptcha.middleware.verify,
+//     passport.authenticate('magiclink', { action : 'requestToken' }),
+//     (req, res) => {
+//         console.log(req.recaptcha.error);
+//         req.flash('success', 'Please check your inbox for your magic link.');
+//         res.redirect('/signin');
+//     }
+// )
 
-app.get('/auth/magiclink/callback',
-  passport.authenticate('magiclink', { action : 'acceptToken' }),
-  (req, res) =>{
-      res.redirect('/');
-    }
-)
+// app.get('/auth/magiclink/callback',
+//   passport.authenticate('magiclink', { action : 'acceptToken' }),
+//   (req, res) =>{
+//       res.redirect('/');
+//     }
+// )
 
 
 module.exports = app;

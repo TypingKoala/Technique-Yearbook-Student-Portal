@@ -1,9 +1,6 @@
-// Start dotenv
-const dotenv = require('dotenv');
-const result = dotenv.config();
-if (result.error) {
-    throw result.error;
-}
+// running 'node standalone/import.js <csvpath>' or 'node import.js <csvpath>' (depending on your current directory) will read the csv file at the 'csvpath' and import students line by line. 
+// The first line should have titles for each column: 'First', 'Last', and 'Email'.
+
 
 const mongoose = require('../middlewares/mongoose');
 var Student = require('../models/student');
