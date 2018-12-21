@@ -12,10 +12,13 @@ const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const path = require('path');
 
+// require the app secret decryption middleware
+const appSecret = require('../middlewares/cryptr').decryptAppSecret;
+
 // Require and Initialize Sessions & MongoStore
 const MongoStore = require('connect-mongo')(session);
 app.use(session({
-    secret: process.env.mongoStoreSecret,
+    secret: appSecret("mongoStoreSecret"),
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -40,7 +43,7 @@ const flash = require('express-flash');
 
 // Initialize Express-Session
 app.use(session({
-    secret: process.env.mongoStoreSecret,
+    secret: appSecret("mongoStoreSecret"),
     cookie: {
         maxAge: 60000
     },
@@ -68,8 +71,8 @@ const mitIssuer = new Issuer({
 }); // => Issuer
 console.log('Set up issuer MIT');
 const client = new mitIssuer.Client({
-    client_id: process.env.oidc_client_id,
-    client_secret: process.env.oidc_client_secret
+    client_id: appSecret("oidc_client_id"),
+    client_secret: appSecret("oidc_client_secret")
 });
 client.CLOCK_TOLERANCE = 5; // to allow a 5 second skew
 console.log('Set up client MIT');
@@ -118,7 +121,7 @@ const MagicLinkStrategy = require('passport-magic-link').Strategy
 const email = require('./email');
 
 passport.use(new MagicLinkStrategy({
-    secret: process.env.magicLinksSecret,
+    secret: appSecret("magicLinksSecret"),
     userFields: ['email'],
     tokenField: 'token'
 }, (user, token) => {

@@ -3,12 +3,6 @@
 
 'use strict';
 
-// Start dotenv
-const dotenv = require('dotenv');
-const result = dotenv.config();
-if (result.error) {
-    throw result.error;
-}
 
 // Variables
 const port = process.env.PORT || 3000;

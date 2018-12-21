@@ -2,14 +2,17 @@
 
 const nodemailer = require('nodemailer');
 
+// require the app secret decryption middleware
+const appSecret = require('../middlewares/cryptr').decryptAppSecret;
+
 let transporter = nodemailer.createTransport({
     port: 587,
     host: 'outgoing.mit.edu',
     secure: false,
     pool: true,
     auth: {
-        user: process.env.emailUser,
-        pass: process.env.emailPass
+        user: appSecret("emailUser"),
+        pass: appSecret("emailPass")
     }
 })
 

@@ -1,8 +1,11 @@
+// require the app secret decryption middleware
+const appSecret = require('./cryptr').decryptAppSecret;
+
 const mongoose = require('mongoose');
 if (process.env.NODE_ENV === "production") {
-    mongoaddr = process.env.mongoProd
+    mongoaddr = appSecret('mongoProd');
 } else {
-    mongoaddr= process.env.mongoDev
+    mongoaddr= appSecret('mongoDev');
 }
 
 mongoose.connect(mongoaddr, {
