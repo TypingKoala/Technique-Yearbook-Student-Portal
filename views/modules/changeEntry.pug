@@ -4,6 +4,7 @@
         .mT-30
             if (failure != "")
                 .alert.alert-danger(role='alert') #{failure}
+            p Your photo and yearbook entry will be linked using your email: <b>#{user.email}</b>. If this email is incorrect or it has changed since you took your photo, please contact us at <i><a href='mailto:technique@mit.edu'>technique@mit.edu</a></i>.
             form(method="post" action="/edit")
                 .form-group
                 label(for='fname') First Name
@@ -20,13 +21,15 @@
                 .form-group
                 label(for='major') Major
                 input.form-control#major(name='major' value=`${user.major}` required)
-                small#majorHelpBlock.form-text.text-muted Required.
+                small#majorHelpBlock.form-text.text-muted Required. Major should be in abbreviated form (ex. 6-2)
                 .form-group
                 label(for='major2') Second Major (for double-majors)
                 input.form-control#major2(name='major2' value=`${user.major2}`)
+                small#secondMajorHelpBlock.form-text.text-muted Second major should be in abbreviated form (ex. 6-2), if applicable.
                 .form-group
                 label(for='minor') Minor
                 input.form-control#minor(name='minor' value=`${user.minor}`)
+                small#minorHelpBlock.form-text.text-muted Minor should be in abbreviated form (ex. 6-2), if applicable.
                 .form-group
                 label(for='quote') Quote
                 textarea.form-control#quote(name='quote' maxlength='130') #{user.quote}
