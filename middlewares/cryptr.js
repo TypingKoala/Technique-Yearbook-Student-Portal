@@ -3,7 +3,7 @@ const Cryptr = require('cryptr');
 // Initialze cryptr instance with the env var 'tnqportalkey' as encryption key
 const cryptr = new Cryptr(process.env.tnqportalkey);
 // Import secrets file
-const secrets = require('../secrets.enc.json');
+const secrets = require('../config/secrets.enc.json');
 
 function encrypt(data) {
     return cryptr.encrypt(data);

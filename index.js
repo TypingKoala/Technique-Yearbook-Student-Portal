@@ -3,10 +3,12 @@
 
 'use strict';
 
+// Require config file
+const settings = require('./config/settings.json');
 
 // Variables
-const port = process.env.PORT || 3000;
-if (!process.env.FQDN) {
+const port = settings.PORT || 3000;
+if (!settings.FQDN) {
     throw new Error('FQDN not specified');
 }
 
@@ -43,5 +45,5 @@ app.use(function onError(err, req, res, next) {
 
 // Start Server
 app.listen(port, () => {
-    console.log('The magic happens at http://'+ process.env.FQDN + ':' + port + '.');
+    console.log('The magic happens at http://'+ settings.FQDN + ':' + port + '.');
 });

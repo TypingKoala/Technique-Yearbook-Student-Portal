@@ -11,6 +11,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const path = require('path');
+const settings = require('../config/settings.json')
 
 // require the app secret decryption middleware
 const appSecret = require('../middlewares/cryptr').decryptAppSecret;
@@ -80,7 +81,7 @@ const {
     Strategy
 } = require('openid-client');
 // Set up redirect_uri based on FQDN
-var redirect_uri = 'http://' + process.env.FQDN + ':' + process.env.PORT + '/auth/cb';
+var redirect_uri = 'http://' + settings.FQDN + ':' + settings.PORT + '/auth/cb';
 // Parameters for OIDC
 const params = {
     scope: "email,profile,openid",
@@ -129,7 +130,7 @@ passport.use(new MagicLinkStrategy({
         from: '"MIT Technique" technique@mit.edu',
         to: user.email,
         subject: 'Login to the Technique Portal',
-        html: 'Please use this link to access the Technique portal: ' + '<a href="http://' + process.env.FQDN + '/auth/magiclink/callback?token=' + token + '"> Access Portal </a>' 
+        html: 'Please use this link to access the Technique portal: ' + '<a href="http://' + settings.FQDN + '/auth/magiclink/callback?token=' + token + '"> Access Portal </a>' 
     })
 }, (user) => {
     return Student.findOne({
