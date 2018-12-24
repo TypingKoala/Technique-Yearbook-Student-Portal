@@ -8,27 +8,27 @@
             form(method="post" action="/edit")
                 .form-group
                 label(for='fname') First Name
-                input.form-control#fname(name='fname' value=`${user.fname}` required)
+                input.form-control#fname(name='fname' value=`${user.fname}` required maxlength='200')
                 small#fnameHelpBlock.form-text.text-muted Required.
                 .form-group
                 label(for='lname') Last Name
-                input.form-control#lname(name='lname' value=`${user.lname}` required)
+                input.form-control#lname(name='lname' value=`${user.lname}` required maxlength='200')
                 small#lnameHelpBlock.form-text.text-muted Required. This is how your name will be sorted in the yearbook.
                 .form-group
                 label(for='nameAsAppears') Name To Appear in the Yearbook
-                input.form-control#nameAsAppears.long-press(name='nameAsAppears' value=`${user.nameAsAppears}` required)
+                input.form-control#nameAsAppears.long-press(name='nameAsAppears' value=`${user.nameAsAppears}` required maxlength='400')
                 small#nameAsAppearsHelpBlock.form-text.text-muted Required. This will be the name printed in the yearbook. To input accented characters, hold down a letter and select the appropriate character with the arrow keys.
                 .form-group
                 label(for='major') Major
-                input.form-control#major(name='major' value=`${user.major}` required)
+                input.form-control#major(name='major' value=`${user.major}` required maxlength='20')
                 small#majorHelpBlock.form-text.text-muted Required. Major should be in abbreviated form (ex. 6-2)
                 .form-group
                 label(for='major2') Second Major (for double-majors)
-                input.form-control#major2(name='major2' value=`${user.major2}`)
+                input.form-control#major2(name='major2' value=`${user.major2}` maxlength='20')
                 small#secondMajorHelpBlock.form-text.text-muted Second major should be in abbreviated form (ex. 6-2), if applicable.
                 .form-group
                 label(for='minor') Minor
-                input.form-control#minor(name='minor' value=`${user.minor}`)
+                input.form-control#minor(name='minor' value=`${user.minor}` maxlength='20')
                 small#minorHelpBlock.form-text.text-muted Minor should be in abbreviated form (ex. 6-2), if applicable.
                 .form-group
                 label(for='quote') Quote

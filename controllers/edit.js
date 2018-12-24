@@ -22,12 +22,30 @@ app.get('/edit', (req, res) => {
 });
 
 app.post('/edit', [
-    check('fname').trim().isString().not().isEmpty().withMessage('First name is required.'),
-    check('lname').trim().isString().not().isEmpty().withMessage('Last name is required.'),
-    check('nameAsAppears').trim().isString().not().isEmpty().withMessage('Your name to appear in the yearbook is required.'),
-    check('major').trim().isString(),
-    check('major2').trim().isString(),
-    check('minor').trim().isString(),
+    check('fname').trim().isString().not().isEmpty().isLength({
+        min: 0,
+        max: 200
+    }).withMessage('First name is required.'),
+    check('lname').trim().isString().not().isEmpty().isLength({
+        min: 0,
+        max: 200
+    }).withMessage('Last name is required.'),
+    check('nameAsAppears').trim().isString().not().isEmpty().isLength({
+        min: 0,
+        max: 400
+    }).withMessage('Your name to appear in the yearbook is required.'),
+    check('major').trim().isString().isLength({
+        min: 0,
+        max: 20
+    }),
+    check('major2').trim().isString().isLength({
+        min: 0,
+        max: 20
+    }),
+    check('minor').trim().isString().isLength({
+        min: 0,
+        max: 20
+    }),
     check('quote').trim().isLength({
         min: 0,
         max: 130
