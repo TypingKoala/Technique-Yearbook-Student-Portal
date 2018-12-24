@@ -1,6 +1,7 @@
 // require the app secret decryption middleware
 const appSecret = require('./cryptr').decryptAppSecret;
 
+// Configure mongoose and connect based on NODE_ENV
 const mongoose = require('mongoose');
 if (process.env.NODE_ENV === "production") {
     mongoaddr = appSecret('mongoProd');
