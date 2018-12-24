@@ -43,27 +43,6 @@ app.get('/auth/cb', passport.authenticate('oidc', {
     });
 });
 
-// app.get('/signin/magic', (req, res) => {
-//     res.render('passwordless', {
-//         title: 'Sign In'
-//     })
-// })
-
-// app.get('/auth/magiclink', recaptcha.middleware.verify,
-//     passport.authenticate('magiclink', { action : 'requestToken' }),
-//     (req, res) => {
-//         console.log(req.recaptcha.error);
-//         req.flash('success', 'Please check your inbox for your magic link.');
-//         res.redirect('/signin');
-//     }
-// )
-
-// app.get('/auth/magiclink/callback',
-//   passport.authenticate('magiclink', { action : 'acceptToken' }),
-//   (req, res) =>{
-//       res.redirect('/');
-//     }
-// )
 
 
 module.exports = app;

@@ -117,28 +117,6 @@ passport.use('oidc', new Strategy({
     }
 }));
 
-// Configure Magic Links
-const MagicLinkStrategy = require('passport-magic-link').Strategy
-const email = require('./email');
-
-passport.use(new MagicLinkStrategy({
-    secret: appSecret("magicLinksSecret"),
-    userFields: ['email'],
-    tokenField: 'token'
-}, (user, token) => {
-    return email({
-        from: '"MIT Technique" technique@mit.edu',
-        to: user.email,
-        subject: 'Login to the Technique Portal',
-        html: 'Please use this link to access the Technique portal: ' + '<a href="http://' + settings.FQDN + '/auth/magiclink/callback?token=' + token + '"> Access Portal </a>' 
-    })
-}, (user) => {
-    return Student.findOne({
-        email: user.email
-    })
-}))
-
-
 // Serialize and Deserialize Passport Sessions
 passport.serializeUser(function (user, done) {
     done(null, user._id);
