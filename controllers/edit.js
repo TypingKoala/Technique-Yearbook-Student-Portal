@@ -7,7 +7,7 @@ const {
     validationResult
 } = require('express-validator/check');
 const pug = require('pug');
-const emailTransporter = require('./email');
+const emailTransporter = require('./email').send;
 
 app.get('/edit', (req, res) => {
     if (req.user) {

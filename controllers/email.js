@@ -43,4 +43,18 @@ function send(message) {
     })
 }
 
-module.exports = send;
+function sendPromise(message) {
+    return new Promise((resolve, reject) => {
+        transporter.sendMail(message, (err, info) => {
+            if (err) {
+                reject(err)
+            } else {
+                console.log('Email to ' + message.to + ' sent successfully');
+                resolve();
+            }
+        })
+    })
+}
+
+module.exports.send = send;
+module.exports.sendPromise = sendPromise;
