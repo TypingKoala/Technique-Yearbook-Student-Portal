@@ -1,58 +1,35 @@
-// Functions used to send emails
 
-const nodemailer = require('nodemailer');
 
 // require the app secret decryption middleware
 const appSecret = require('../middlewares/cryptr').decryptAppSecret;
 
-let transporter = nodemailer.createTransport({
-    port: 587,
-    host: 'outgoing.mit.edu',
-    secure: false,
-    pool: true,
-    auth: {
-        user: appSecret("emailUser"),
-        pass: appSecret("emailPass")
-    }
-})
 
-// verify connection configuration
-transporter.verify(function(error, success) {
-    if (error) {
-         console.log(error);
-    }
- });
+var mailgun = require("mailgun-js");
+var DOMAIN = 'mg.jbui.me'
+var mailgun = require('mailgun-js')({apiKey: appSecret('mailgunAPIKey'), domain: DOMAIN});
 
 
 
 // var message = {
-//     from: '"MIT Technique" technique@mit.edu',
+//     from: 'MIT Technique <technique@mit.edu>',
 //     to: 'jbui@mit.edu',
 //     subject: 'test test',
-//     text: 'this is a test',
 //     html: 'this is a test'
 // }
 
 function send(message) {
-    transporter.sendMail(message, (err, info) => {
-        if (err) {
-            console.log(err.message);
-        } else {
-            console.log('Email sent successfully');
-        }
-    })
+    mailgun.messages().send(message, function (error, body) {
+        console.log(body);
+    });
 }
 
 function sendPromise(message) {
     return new Promise((resolve, reject) => {
-        transporter.sendMail(message, (err, info) => {
-            if (err) {
-                reject(err)
-            } else {
-                console.log('Email to ' + message.to + ' sent successfully');
-                resolve();
-            }
-        })
+        mailgun.messages().send(message, function (error, body) {
+            if (error) return reject();
+            console.log('Status for message to ' + message.to + ': ' + body.message);
+            resolve();
+        });
     })
 }
 

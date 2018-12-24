@@ -44,47 +44,46 @@ app.post('/edit', [
             })[0].msg)
             return res.redirect('back');
         }
-
+        req.user.set({
+            fname: req.body.fname,
+            lname: req.body.lname,
+            nameAsAppears: req.body.nameAsAppears,
+            major: req.body.major,
+            major2: req.body.major2,
+            minor: req.body.minor,
+            quote: req.body.quote,
+            confirmed: true
+        });
         req.user.save((err, updatedUser) => {
             if (err) return next(err);
             res.redirect('/');
-
-            // Send confirmation email
-            fields = {
-                title: 'Your Confirmed Yearbook Entry',
-                preheader: 'We just wanted to send you a copy of your confirmed yearbook entry.',
-                superheader: 'Hey ' + req.body.fname + ',',
-                header: 'Thank you for confirming your yearbook entry!',
-                paragraph: 'You can view and edit your yearbook entry until Feburary 1st. We have provided a copy below for your records.',
-                records: {
-                    Name: req.body.nameAsAppears,
-                    Major: req.body.major,
-                    "Second Major": req.body.major2,
-                    Minor: req.body.minor,
-                    Quote: req.body.quote
-                },
-                buttonLink: 'http://tnqportal.mit.edu',
-                buttonText: 'Visit the Technique Student Portal'
-            };
-            html = pug.renderFile('./views/emailtemplate.pug', fields);
-            var message = {
-                from: '"MIT Technique" technique@mit.edu',
-                to: req.user.email,
-                subject: 'Your Confirmed Yearbook Entry',
-                html
-            };
-            emailTransporter(message);
-            req.user.set({
-                fname: req.body.fname,
-                lname: req.body.lname,
-                nameAsAppears: req.body.nameAsAppears,
-                major: req.body.major,
-                major2: req.body.major2,
-                minor: req.body.minor,
-                quote: req.body.quote,
-                confirmed: true
-            });
         });
+
+        // Send confirmation email
+        fields = {
+            title: 'Your Confirmed Yearbook Entry',
+            preheader: 'We just wanted to send you a copy of your confirmed yearbook entry.',
+            superheader: 'Hey ' + req.body.fname + ',',
+            header: 'Thank you for confirming your yearbook entry!',
+            paragraph: 'You can view and edit your yearbook entry until Feburary 1st. We have provided a copy below for your records.',
+            records: {
+                Name: req.body.nameAsAppears,
+                Major: req.body.major,
+                "Second Major": req.body.major2 || "<blank>",
+                Minor: req.body.minor || "<blank>",
+                Quote: req.body.quote || "<blank>"
+            },
+            buttonLink: 'http://tnqportal.mit.edu',
+            buttonText: 'Visit the Technique Student Portal'
+        };
+        html = pug.renderFile('./views/emailtemplate.pug', fields);
+        var message = {
+            from: 'MIT Technique <technique@mit.edu>',
+            to: req.user.email,
+            subject: 'Your Confirmed Yearbook Entry',
+            html
+        };
+        emailTransporter(message);
     } else {
         res.redirect('/signin')
     }

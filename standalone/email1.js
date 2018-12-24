@@ -56,7 +56,7 @@ function sendEmails(dryRun) {
                 };
                 html = pug.renderFile('./views/emailtemplate.pug', fields);
                 var message = {
-                    from: '"MIT Technique" technique@mit.edu',
+                    from: 'MIT Technique <technique@mit.edu>',
                     to: student.email,
                     subject: '[ACTION REQUIRED] Confirm Your Yearbook Entry',
                     html
