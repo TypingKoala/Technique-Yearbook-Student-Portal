@@ -63,22 +63,19 @@ function sendEmails(dryRun) {
         if (err) {
             console.log(err);
         }
-        counter = students.length; // initialize decrementing counter to track # of callbacks after each student iter
+        counter = students.length; // initialize decrementing counter to track # of callbacks after each student iteration
         students.forEach(student => {
-            if (dryRun) {
+            if (dryRun && !student.confirmed) {
                 console.log(student.email);
                 counter = counter - 1;
-                if (counter == 0) {
-                    process.exit();
-                }
-            } else {
+            } else if (!student.confirmed) {
                 // Send email
                 fields = {
                     title: '[ACTION REQUIRED] Confirm Your Yearbook Entry',
                     preheader: "It's time to confirm your Technique 2019 yearbook entry.",
                     superheader: 'Hey ' + student.fname + ',',
                     header: "There's just one more step...",
-                    paragraph: "Thank you for taking your senior portrait! Now, it's time to enter your senior quote information and confirm your yearbook entry for Technique 2019. You can log in and confirm in less than 60 seconds through the student portal with the link below. If you do not confirm by the deadline of 02/01, then Technique will not be responsible for any inaccuracies in your senior yearbook. Happy holidays from MIT Technique!",
+                    paragraph: "Thank you for taking your senior portrait! Now, it's time to enter your senior quote information and confirm your yearbook entry for Technique 2019. You can log in and confirm your biogrpahical information in less than 60 seconds through the student portal. If you do not confirm by the deadline of 02/01, then Technique will not be responsible for any inaccuracies in your senior bio. Happy holidays from MIT Technique!",
                     records: {},
                     buttonLink: 'http://tnqportal.mit.edu',
                     buttonText: 'Visit the Technique Student Portal'
@@ -92,11 +89,14 @@ function sendEmails(dryRun) {
                 };
                 emailTransporter(message).then(() => {
                     counter = counter - 1;
-                    if (counter == 0) {
-                        process.exit();
-                    }
                 });
-            };
+            } else {
+                counter = counter - 1;
+            }
+
+            if (counter == 0) {
+                process.exit();
+            }
 
         })
     })
