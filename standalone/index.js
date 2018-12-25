@@ -7,6 +7,7 @@ program
 
 program
     .command('encrypt <string>')
+    .description('Encrypt the given string using the environment variable tnqportalkey')
     .action((string) => {
         const cryptr = require('../middlewares/cryptr');
         console.log(cryptr.encrypt(string));
@@ -15,6 +16,7 @@ program
 
 program
     .command('decrypt <string>')
+    .description('Decrypt the given string using the environment variable tnqportalkey')
     .action((string) => {
         const cryptr = require('../middlewares/cryptr');
         console.log(cryptr.decrypt(string));
@@ -22,6 +24,7 @@ program
 
 program
     .command('import <path>')
+    .description('Import students from a csv file at the given path')
     .action((path) => {
         return importcsv(path);
     });
@@ -29,6 +32,7 @@ program
 program
     .command('email')
     .option('--production', 'send the emails through the live Mailgun instance')
+    .description('Send emails to students who have not confirmed')
     .action((options) => {
         if (options.production) {
             const rl = readline.createInterface({
@@ -58,6 +62,12 @@ function sendEmails(dryRun) {
     const pug = require('pug');
     const mongoose = require('../middlewares/mongoose');
     const Student = require('../models/student');
+
+    if (dryRun) {
+        console.log('This is a dry run, and no emails will be sent.')
+    } else {
+        console.log('This is a production run of the email function.')
+    }
 
     Student.find((err, students) => {
         if (err) {

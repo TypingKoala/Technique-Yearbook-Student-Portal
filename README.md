@@ -67,10 +67,10 @@ Options:
   -h, --help        output usage information
 
 Commands:
-  encrypt <string>
-  decrypt <string>
-  import <path>
-  email [options]
+  encrypt <string>  Encrypt the given string using the environment variable tnqportalkey
+  decrypt <string>  Decrypt the given string using the environment variable tnqportalkey
+  import <path>     Import students from a csv file at the given path
+  email [options]   Send emails to students who have not confirmed
 ```
 
 # APIs
