@@ -13,7 +13,6 @@ const appSecret = require('../middlewares/cryptr').decryptAppSecret;
 
 // Initialize Express-Recaptcha
 var Recaptcha = require('express-recaptcha').Recaptcha;
-var recaptcha = new Recaptcha(appSecret('recaptchaSiteKey'), appSecret('recaptchaSecretKey'))
 
 // GET /signin
 app.get('/signin', (req, res) => {
