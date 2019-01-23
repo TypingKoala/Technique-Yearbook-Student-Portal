@@ -135,6 +135,7 @@ app.use(express.static('public'));
 app.use(require('./home'));
 app.use(require('./signin'));
 app.use(require('./edit'));
+app.use(require('./loadtest'));
 
 // GET /signout
 app.get('/signout', (req, res) => {
