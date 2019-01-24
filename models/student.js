@@ -34,7 +34,7 @@ var StudentSchema = new mongoose.Schema({
     authKey: {
         type: String,
         unique: true,
-        default: crypto.randomBytes(32).toString('hex')
+        required: true
     },
     portraitURL: {
         type: String

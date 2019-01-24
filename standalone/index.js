@@ -115,6 +115,7 @@ function sendEmails(dryRun) {
 function importcsv(path) {
     const mongoose = require('../middlewares/mongoose');
     var Student = require('../models/student');
+    const crypto = require('crypto');
 
     // load csv
     const fs = require('fs');
@@ -125,14 +126,15 @@ function importcsv(path) {
         .on('data', function (data) {
             try {
                 Student.create({
-                    fname: data.First,
-                    lname: data.Last,
-                    nameAsAppears: data.First + ' ' + data.Last,
-                    email: data.Email,
+                    fname: data.FIRSTNAME,
+                    lname: data.LASTNAME,
+                    nameAsAppears: data.FIRSTNAME + ' ' + data.LASTNAME,
+                    email: data.EMAIL,
                     major: '',
                     major2: '',
                     minor: '',
-                    quote: ''
+                    quote: '',
+                    authKey: crypto.randomBytes(32).toString('hex')
                 });
             } catch (err) {
                 console.log(err.message)
