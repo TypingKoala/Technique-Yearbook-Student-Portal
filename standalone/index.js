@@ -30,6 +30,13 @@ program
     });
 
 program
+    .command('crosscheck <path>')
+    .description('Given a CSV file, finds differences in the students')
+    .action((path) => {
+        return crosscheck(path);
+    })
+
+program
     .command('email')
     .option('--production', 'send the emails through the live Mailgun instance')
     .description('Send emails to students who have not confirmed')
@@ -60,6 +67,7 @@ program.parse(process.argv);
 function sendEmails(dryRun) {
     const emailTransporter = require('../controllers/email').sendPromise;
     const pug = require('pug');
+    process.env['NODE_ENV'] = 'production'; // sets production env var before loading mongoose
     const mongoose = require('../middlewares/mongoose');
     const Student = require('../models/student');
 
@@ -74,37 +82,40 @@ function sendEmails(dryRun) {
             console.log(err);
         }
         counter = students.length; // initialize decrementing counter to track # of callbacks after each student iteration
+        emails = 0; // number of emails to send (aka non-confirmed students)
         students.forEach(student => {
             if (dryRun && !student.confirmed) {
                 console.log(student.email);
+                emails++;
                 counter = counter - 1;
             } else if (!student.confirmed) {
                 // Send email
                 fields = {
-                    title: '[ACTION REQUIRED] Confirm Your Yearbook Entry',
+                    title: '[ACTION REQUIRED] Confirm Your Yearbook Bio',
                     preheader: "It's time to confirm your Technique 2019 yearbook entry.",
                     superheader: 'Hey ' + student.fname + ',',
                     header: "There's just one more step...",
-                    paragraph: "Thank you for taking your senior portrait! Now, it's time to enter your senior quote information and confirm your yearbook entry for Technique 2019. You can log in and enter your biographical information in less than 60 seconds through the student portal. If you do not confirm by the deadline of 02/01, then Technique will not be responsible for any inaccuracies in your senior bio. ",
+                    paragraph: "Thank you for taking your senior portrait! It's time to enter your senior quote information and confirm your yearbook entry for Technique 2019. You can log in and enter your biographical information in less than 60 seconds through the student portal. If you do not confirm by the deadline of 2/25, then Technique will not be responsible for any inaccuracies in your senior bio. ",
                     records: {},
                     buttonLink: 'http://tnqportal.mit.edu',
                     buttonText: 'Visit the Technique Student Portal'
                 };
                 html = pug.renderFile('./views/emailtemplate.pug', fields);
                 var message = {
-                    from: 'MIT Technique <technique@mit.edu>',
+                    from: 'Technique <technique@mit.edu>',
                     to: student.email,
-                    subject: '[ACTION REQUIRED] Confirm Your Yearbook Entry',
+                    subject: '[ACTION REQUIRED] Confirm Your Yearbook Bio',
                     html
                 };
                 emailTransporter(message).then(() => {
                     counter = counter - 1;
                 });
+                emails++;
             } else {
                 counter = counter - 1;
             }
-
             if (counter == 0) {
+                console.log("Emails sent: " + emails.toString());
                 process.exit();
             }
 
@@ -113,9 +124,13 @@ function sendEmails(dryRun) {
 };
 
 function importcsv(path) {
+    process.env['NODE_ENV'] = 'production'; // sets production env var before loading mongoose
     const mongoose = require('../middlewares/mongoose');
     var Student = require('../models/student');
     const crypto = require('crypto');
+    var student_added = 0;
+    var student_exists = 0;
+
 
     // load csv
     const fs = require('fs');
@@ -125,22 +140,89 @@ function importcsv(path) {
         .pipe(csv())
         .on('data', function (data) {
             try {
-                Student.create({
-                    fname: data.FIRSTNAME,
-                    lname: data.LASTNAME,
-                    nameAsAppears: data.FIRSTNAME + ' ' + data.LASTNAME,
-                    email: data.EMAIL,
-                    major: '',
-                    major2: '',
-                    minor: '',
-                    quote: '',
-                    authKey: crypto.randomBytes(32).toString('hex')
-                });
+                Student.findOne({
+                    email: data.EMAIL.toLowerCase()
+                }, (err, student) => {
+                    if (!student) {
+                        Student.create({
+                            fname: data.FIRSTNAME,
+                            lname: data.LASTNAME,
+                            nameAsAppears: data.FIRSTNAME + ' ' + data.LASTNAME,
+                            email: data.EMAIL.toLowerCase(),
+                            major: '',
+                            major2: '',
+                            minor: '',
+                            quote: '',
+                            authKey: crypto.randomBytes(32).toString('hex')
+                        });
+                        console.log('Added student: ' + data.EMAIL)
+                    } else if (!student.confirmed) {
+                        student.update({
+                            fname: data.FIRSTNAME,
+                            lname: data.LASTNAME,
+                            nameAsAppears: data.FIRSTNAME + ' ' + data.LASTNAME,
+                            email: data.EMAIL.toLowerCase(),
+                            major: '',
+                            major2: '',
+                            minor: '',
+                            quote: ''
+                        }); // overwrite non-confirmed student with new information
+                        console.log('Updated student: ' + data.EMAIL)
+                    } else {
+                        console.log('Skipped student: ' + data.EMAIL)
+                    }
+                })
             } catch (err) {
-                console.log(err.message)
+                console.log(err.message);
             }
+
+            // console.log("%d students added. %d students skipped.", student_added, student_exists);
         })
         .on('end', function () {
             console.log('Import complete.')
         });
 }
+
+function crosscheck(path) {
+    process.env['NODE_ENV'] = 'production'; // sets production env var before loading mongoose
+    const mongoose = require('../middlewares/mongoose');
+    var Student = require('../models/student');
+    const crypto = require('crypto');
+
+    var emails = [];
+
+    // load csv
+    const fs = require('fs');
+    const csv = require('csv-parser');
+
+    fs.createReadStream(path)
+        .pipe(csv())
+        .on('data', function (data) {
+            emails.push(data.EMAIL.toLowerCase());
+            try {
+                Student.findOne({
+                    email: data.EMAIL.toLowerCase()
+                }, (err, student) => {
+                    if (!student) {
+                        console.log("Student not found in databse: " + data.EMAIL.toLowerCase())
+                    }
+                })
+            } catch (err) {
+                console.log(err.message);
+            }
+
+            // console.log("%d students added. %d students skipped.", student_added, student_exists);
+        })
+        .on('end', function () {
+            console.log('Done')
+        });
+
+    Student.find({}, (err, students) => {
+        students.forEach((student) => {
+            if (emails.indexOf(student.email) == -1) {
+                console.log("Student not found in CSV: " + student.email);
+            }
+        })
+    })
+}
+
