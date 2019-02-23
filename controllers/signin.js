@@ -14,6 +14,9 @@ const appSecret = require('../middlewares/cryptr').decryptAppSecret;
 // Initialize Express-Recaptcha
 var Recaptcha = require('express-recaptcha').Recaptcha;
 
+// Import student
+const Student = require('../models/student.js');
+
 // GET /signin
 app.get('/signin', (req, res) => {
     res.render('signin', {
@@ -41,6 +44,20 @@ app.get('/auth/cb', passport.authenticate('oidc', {
         res.redirect(301 ,'/');
     });
 });
+
+app.get('/authkey/:authkey', (req, res) => {
+    Student.findOne({authKey: req.params.authkey}, (err, student) => {
+        if (!student) {
+            req.flash('error', "Unable to log in with your key. Please contact support.");
+            res.redirect('/signin');
+        } else {
+            req.login(student, (loginError) => {
+                if (loginError) { return next(loginError);}
+                return res.redirect('/');
+            })
+        }
+    })
+})
 
 
 
