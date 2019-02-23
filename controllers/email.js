@@ -19,6 +19,9 @@ var mailgun = require('mailgun-js')({apiKey: appSecret('mailgunAPIKey'), domain:
 
 function send(message) {
     mailgun.messages().send(message, function (error, body) {
+        if (error) {
+            console.log(error);
+        }
         console.log(body);
     });
 }
