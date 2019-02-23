@@ -83,7 +83,7 @@ app.post('/edit', [
             preheader: 'We just wanted to send you a copy of your confirmed yearbook entry.',
             superheader: 'Hey ' + req.body.fname + ',',
             header: 'Thank you for confirming your yearbook entry!',
-            paragraph: 'You can view and edit your yearbook entry until Feburary 1st. We have provided a copy below for your records.',
+            paragraph: 'You can view and edit your yearbook entry until Feburary 28th. We have provided a copy below for your records.',
             records: {
                 Name: req.body.nameAsAppears,
                 Major: req.body.major,
@@ -118,7 +118,7 @@ app.post('/confirm', (req, res, next) => {
                 preheader: 'We just wanted to send you a copy of your confirmed yearbook entry.',
                 superheader: 'Hey ' + req.user.fname + ',',
                 header: 'Thank you for confirming your yearbook entry!',
-                paragraph: 'You can view and edit your yearbook entry until Feburary 1st. We have provided a copy below for your records.',
+                paragraph: 'You can view and edit your yearbook entry until Feburary 28th. We have provided a copy below for your records.',
                 records: {
                     Name: req.user.nameAsAppears,
                     Major: req.user.major,

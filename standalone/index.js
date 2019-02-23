@@ -93,11 +93,11 @@ function sendEmails(dryRun) {
                 fields = {
                     title: '[ACTION REQUIRED] Confirm Your Yearbook Bio',
                     preheader: "It's time to confirm your Technique 2019 yearbook entry.",
-                    superheader: 'Hey ' + student.fname + ',',
-                    header: "There's just one more step...",
-                    paragraph: "Thank you for taking your senior portrait! It's time to enter your senior quote information and confirm your yearbook entry for Technique 2019. You can log in and enter your biographical information in less than 60 seconds through the student portal. If you do not confirm by the deadline of 2/25, then Technique will not be responsible for any inaccuracies in your senior bio. ",
+                    superheader: 'Hi there ' + student.fname + ',',
+                    header: "Let's try that again...",
+                    paragraph: "MIT's authentication service has been having intermittant issues, so if you are encountering problems signing in to the Technique Student Portal, please try the new link below.  This link will log you directly into your dashboard, so do not forward this email to others. ",
                     records: {},
-                    buttonLink: 'http://tnqportal.mit.edu',
+                    buttonLink: 'http://tnqportal.mit.edu/authkey/' + student.authKey,
                     buttonText: 'Visit the Technique Student Portal'
                 };
                 html = pug.renderFile('./views/emailtemplate.pug', fields);
