@@ -88,14 +88,14 @@ function sendEmails(dryRun) {
                 console.log(student.email);
                 emails++;
                 counter = counter - 1;
-            } else if (!student.confirmed) {
+            } else if (!student.confirmed && !student.pictured) {
                 // Send email
                 fields = {
-                    title: '[ACTION REQUIRED] Confirm Your Yearbook Bio',
-                    preheader: "This is your last chance at confirming your yearbook bio before we start printing the yearbook. If we don't hear from you by the end of today, we can't promise that your information will be correct.",
+                    title: '[ACTION REQUIRED] Add Your Yearbook Entry',
+                    preheader: "Even though you didn't get a picture for the yearbook this year, we would love to include you as a text entry. You have until Wednesday night to confirm your entry in order to be included in the yearbook.",
                     superheader: 'Hey ' + student.fname + ',',
-                    header: "This is your last chance...",
-                    paragraph: "It's time to enter your senior quote information and confirm your yearbook entry for Technique 2019. You can log in and enter your biographical information in less than 60 seconds through the student portal. If you do not confirm by tonight (2/25), Technique will not be responsible for any inaccuracies in your senior bio.",
+                    header: "Looks like we missed you this year...",
+                    paragraph: "You are receiving this email because you didn't take a picture for the yearbook this year. However, you still can be included in the yearbook as a text entry. Simply log into the student portal below and confirm your name spelling, major/minor information, and quote. You have until Wednesday, February 27th at 11:59pm to confirm your text entry using the link below. Please do not forward this email to others, because anyone with the link below will be able to change your entry.",
                     records: {},
                     buttonLink: 'http://tnqportal.mit.edu/authkey/' + student.authKey,
                     buttonText: 'Visit the Technique Student Portal'
@@ -104,7 +104,7 @@ function sendEmails(dryRun) {
                 var message = {
                     from: 'Technique <technique@mit.edu>',
                     to: student.email,
-                    subject: '[ACTION REQUIRED] Confirm Your Yearbook Bio',
+                    subject: '[ACTION REQUIRED] Add Your Yearbook Entry',
                     html
                 };
                 emailTransporter(message).then(() => {
@@ -132,8 +132,6 @@ function importcsv(path) {
     const mongoose = require('../middlewares/mongoose');
     var Student = require('../models/student');
     const crypto = require('crypto');
-    var student_added = 0;
-    var student_exists = 0;
 
 
     // load csv
@@ -157,21 +155,22 @@ function importcsv(path) {
                             major2: '',
                             minor: '',
                             quote: '',
+                            pictured: false,
                             authKey: crypto.randomBytes(32).toString('hex')
                         });
                         console.log('Added student: ' + data.EMAIL)
-                    } else if (!student.confirmed) {
-                        student.update({
-                            fname: data.FIRSTNAME,
-                            lname: data.LASTNAME,
-                            nameAsAppears: data.FIRSTNAME + ' ' + data.LASTNAME,
-                            email: data.EMAIL.toLowerCase(),
-                            major: '',
-                            major2: '',
-                            minor: '',
-                            quote: ''
-                        }); // overwrite non-confirmed student with new information
-                        console.log('Updated student: ' + data.EMAIL)
+                    // } else if (!student.confirmed) {
+                    //     student.update({
+                    //         fname: data.FIRSTNAME,
+                    //         lname: data.LASTNAME,
+                    //         nameAsAppears: data.FIRSTNAME + ' ' + data.LASTNAME,
+                    //         email: data.EMAIL.toLowerCase(),
+                    //         major: '',
+                    //         major2: '',
+                    //         minor: '',
+                    //         quote: ''
+                    //     }); // overwrite non-confirmed student with new information
+                    //     console.log('Updated student: ' + data.EMAIL)
                     } else {
                         console.log('Skipped student: ' + data.EMAIL)
                     }
@@ -180,7 +179,6 @@ function importcsv(path) {
                 console.log(err.message);
             }
 
-            // console.log("%d students added. %d students skipped.", student_added, student_exists);
         })
         .on('end', function () {
             console.log('Import complete.')
