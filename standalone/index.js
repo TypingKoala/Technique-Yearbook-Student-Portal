@@ -109,6 +109,10 @@ function sendEmails(dryRun) {
                 };
                 emailTransporter(message).then(() => {
                     counter = counter - 1;
+                    if (counter == 0) {
+                        console.log("Emails sent: " + emails.toString());
+                        process.exit();
+                    }
                 });
                 emails++;
             } else {
@@ -118,7 +122,7 @@ function sendEmails(dryRun) {
                 console.log("Emails sent: " + emails.toString());
                 process.exit();
             }
-
+            
         })
     })
 };
