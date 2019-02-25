@@ -38,6 +38,10 @@ var StudentSchema = new mongoose.Schema({
     },
     portraitURL: {
         type: String
+    },
+    pictured: {
+        type: Boolean,
+        default: false
     }
 
 });
