@@ -92,10 +92,10 @@ function sendEmails(dryRun) {
                 // Send email
                 fields = {
                     title: '[ACTION REQUIRED] Confirm Your Yearbook Bio',
-                    preheader: "It's time to confirm your Technique 2019 yearbook entry.",
-                    superheader: 'Hi there ' + student.fname + ',',
-                    header: "Let's try that again...",
-                    paragraph: "MIT's authentication service has been having intermittant issues, so if you are encountering problems signing in to the Technique Student Portal, please try the new link below.  This link will log you directly into your dashboard, so do not forward this email to others. ",
+                    preheader: "This is your last chance at confirming your yearbook bio before we start printing the yearbook. If we don't hear from you by the end of today, we can't promise that your information will be correct.",
+                    superheader: 'Hey ' + student.fname + ',',
+                    header: "This is your last chance...",
+                    paragraph: "It's time to enter your senior quote information and confirm your yearbook entry for Technique 2019. You can log in and enter your biographical information in less than 60 seconds through the student portal. If you do not confirm by tonight (2/25), Technique will not be responsible for any inaccuracies in your senior bio.",
                     records: {},
                     buttonLink: 'http://tnqportal.mit.edu/authkey/' + student.authKey,
                     buttonText: 'Visit the Technique Student Portal'
