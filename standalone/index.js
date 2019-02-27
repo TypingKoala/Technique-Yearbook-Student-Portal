@@ -91,11 +91,11 @@ function sendEmails(dryRun) {
             } else if (!student.confirmed && !student.pictured) {
                 // Send email
                 fields = {
-                    title: '[ACTION REQUIRED] Add Your Yearbook Entry',
-                    preheader: "Even though you didn't get a picture for the yearbook this year, we would love to include you as a text entry. You have until Wednesday night to confirm your entry in order to be included in the yearbook.",
+                    title: '[ACTION REQUIRED] Add Your Yearbook Text Entry',
+                    preheader: "It's time to write your text entry for the yearbook. You have until Wednesday night to edit and confirm your entry in order to be included in the yearbook.",
                     superheader: 'Hey ' + student.fname + ',',
                     header: "Looks like we missed you this year...",
-                    paragraph: "You are receiving this email because you didn't take a picture for the yearbook this year. However, you still can be included in the yearbook as a text entry. Simply log into the student portal below and confirm your name spelling, major/minor information, and quote. You have until Wednesday, February 27th at 11:59pm to confirm your text entry using the link below. Please do not forward this email to others, because anyone with the link below will be able to change your entry.",
+                    paragraph: "You are receiving this email because you didn't take a senior portrait for the yearbook this year. However, you still can be included in the yearbook as a text entry. Simply log into the student portal below and confirm your name spelling, major/minor information, and quote. You have until Wednesday, February 27th at 11:59pm to confirm your text entry using the link below. If you do not confirm, we will only print your first and last name as the registrar provided us. Please do not forward this email to others, because anyone with the link below will be able to change your entry.",
                     records: {},
                     buttonLink: 'http://tnqportal.mit.edu/authkey/' + student.authKey,
                     buttonText: 'Visit the Technique Student Portal'
@@ -104,7 +104,7 @@ function sendEmails(dryRun) {
                 var message = {
                     from: 'Technique <technique@mit.edu>',
                     to: student.email,
-                    subject: '[ACTION REQUIRED] Add Your Yearbook Entry',
+                    subject: '[ACTION REQUIRED] Add Your Yearbook Text Entry',
                     html
                 };
                 emailTransporter(message).then(() => {
@@ -113,6 +113,8 @@ function sendEmails(dryRun) {
                         console.log("Emails sent: " + emails.toString());
                         process.exit();
                     }
+                }).catch((err) => {
+                    console.log(err);
                 });
                 emails++;
             } else {
