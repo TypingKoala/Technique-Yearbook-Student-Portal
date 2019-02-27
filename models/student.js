@@ -42,6 +42,10 @@ var StudentSchema = new mongoose.Schema({
     pictured: {
         type: Boolean,
         default: false
+    },
+    editable: {
+        type: Boolean,
+        default: true
     }
 
 });

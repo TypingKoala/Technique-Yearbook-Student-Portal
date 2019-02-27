@@ -20,8 +20,9 @@
                 span.icon-holder
                   i.c-blue-500.ti-home
                 span.title Home
-            li.nav-item
-              a.sidebar-link(href='/edit')
-                span.icon-holder
-                  i.c-green-500.ti-pencil
-                span.title Edit
+            if (user.editable)
+              li.nav-item
+                a.sidebar-link(href='/edit')
+                  span.icon-holder
+                    i.c-green-500.ti-pencil
+                  span.title Edit

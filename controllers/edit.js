@@ -11,11 +11,15 @@ const emailTransporter = require('./email').send;
 
 app.get('/edit', (req, res) => {
     if (req.user) {
-        res.render('edit', {
+        if (req.user.editable) {
+            res.render('edit', {
             title: 'Edit',
             user: req.user,
-            failure: req.flash('failure'),
-        });
+            failure: req.flash('failure')
+            });
+        } else {
+            res.send('You do not have permission to access this page.')
+        }
     } else {
         res.redirect('/signin')
     }
@@ -51,7 +55,7 @@ app.post('/edit', [
         max: 130
     }).withMessage('Your quote must be less than 130 characters.')
 ], (req, res, next) => {
-    if (req.user) {
+    if (req.user && req.user.editable) {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             req.flash('failure', errors.array({
@@ -108,7 +112,7 @@ app.post('/edit', [
 });
 
 app.post('/confirm', (req, res, next) => {
-    if (req.user) {
+    if (req.user && req.user.editable) {
         req.user.confirmed = true;
         req.user.save((err, updatedUser) => {
             if (err) return next(err);
