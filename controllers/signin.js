@@ -35,7 +35,7 @@ app.get('/signin', recaptcha.middleware.render, (req, res) => {
 app.post('/signin', recaptcha.middleware.verify, (req, res) => {
     if (!req.recaptcha.error) {
         Student.findOne({
-            email: req.body.email
+            email: req.body.email.toLowerCase()
         }, (err, student) => {
             if (student) {
                 fields = {
