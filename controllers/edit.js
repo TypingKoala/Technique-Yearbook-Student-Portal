@@ -26,7 +26,7 @@ function sendConfirmationEmail(user) {
             "Hometown": user.hometown || "<blank>",
             "Quote": user.quote || "<blank>"
         },
-        buttonLink: 'http://tnqportal.mit.edu/authkey/' + student.authKey,
+        buttonLink: 'http://tnqportal.mit.edu/authkey/' + user.authKey,
         buttonText: 'Edit your yearbook entry'
     };
     html = pug.renderFile('./views/emailtemplate.pug', fields);
