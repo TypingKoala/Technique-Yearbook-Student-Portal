@@ -40,6 +40,10 @@
                     .col-sm-10
                         input.form-control#minor.form-control-plaintext(name='minor' readonly value=`${user.minor}`)
                 .form-group.row
+                    label.col-sm-2.col-form-label(for='hometown') Hometown
+                    .col-sm-10
+                        textarea.form-control#hometown.form-control-plaintext(name='hometown' readonly maxlength='80') #{user.hometown}
+                .form-group.row
                     label.col-sm-2.col-form-label(for='quote') Quote
                     .col-sm-10
                         textarea.form-control#quote.form-control-plaintext(name='quote' readonly maxlength='130') #{user.quote}

@@ -9,13 +9,43 @@ const {
 const pug = require('pug');
 const emailTransporter = require('./email').send;
 
+function sendConfirmationEmail(user) {
+    // Send confirmation email
+    fields = {
+        title: "Thanks for confirming your yearbook entry",
+        preheader: 'We just wanted to send you a copy of your confirmed yearbook entry.',
+        superheader: 'Hey ' + user.fname + ',',
+        header: 'Thank you for confirming your yearbook entry!',
+        paragraph: "You can view and edit your yearbook entry until February 14th. We have provided a copy below for your records. Do not forward this email to people you don't trust, since the link below automatically logs you in.",
+        records: {
+            "Name to sort by": user.fname + " " + user.lname,
+            "Name to display": user.nameAsAppears,
+            "Major": user.major,
+            "Second Major": user.major2 || "<blank>",
+            "Minor": user.minor || "<blank>",
+            "Hometown": user.hometown || "<blank>",
+            "Quote": user.quote || "<blank>"
+        },
+        buttonLink: 'http://tnqportal.mit.edu/authkey/' + student.authKey,
+        buttonText: 'Edit your yearbook entry'
+    };
+    html = pug.renderFile('./views/emailtemplate.pug', fields);
+    var message = {
+        from: 'MIT Technique <technique@mit.edu>',
+        to: user.email,
+        subject: "Thanks for confirming your Technique entry",
+        html
+    };
+    emailTransporter(message);
+}
+
 app.get('/edit', (req, res) => {
     if (req.user) {
         if (req.user.editable) {
             res.render('edit', {
-            title: 'Edit',
-            user: req.user,
-            failure: req.flash('failure')
+                title: 'Edit',
+                user: req.user,
+                failure: req.flash('failure')
             });
         } else {
             res.send('You do not have permission to access this page.')
@@ -50,12 +80,20 @@ app.post('/edit', [
         min: 0,
         max: 20
     }),
+    check('hometown').trim().isLength({
+        min: 0,
+        max: 80
+    }).withMessage('Your hometown can be up to 80 characters.'),
     check('quote').trim().isLength({
         min: 0,
         max: 130
-    }).withMessage('Your quote must be less than 130 characters.')
+    }).withMessage('Your quote can be up to 130 characters.')
 ], (req, res, next) => {
-    if (req.user && req.user.editable) {
+    if (req.user) {
+        if (!req.user.editable) {
+            req.flash('failure', "You don't have permission to edit this.");
+            req.redirect('/edit');
+        }
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             req.flash('failure', errors.array({
@@ -73,39 +111,15 @@ app.post('/edit', [
             major: req.body.major,
             major2: req.body.major2,
             minor: req.body.minor,
+            hometown: req.body.hometown,
             quote: req.body.quote,
             confirmed: true
         });
         req.user.save((err, updatedUser) => {
             if (err) return next(err);
             res.redirect('/');
+            sendConfirmationEmail(updatedUser);
         });
-
-        // Send confirmation email
-        fields = {
-            title: 'Your Confirmed Yearbook Entry',
-            preheader: 'We just wanted to send you a copy of your confirmed yearbook entry.',
-            superheader: 'Hey ' + req.body.fname + ',',
-            header: 'Thank you for confirming your yearbook entry!',
-            paragraph: 'You can view and edit your yearbook entry until Feburary 28th. We have provided a copy below for your records.',
-            records: {
-                Name: req.body.nameAsAppears,
-                Major: req.body.major,
-                "Second Major": req.body.major2 || "<blank>",
-                Minor: req.body.minor || "<blank>",
-                Quote: req.body.quote || "<blank>"
-            },
-            buttonLink: 'http://tnqportal.mit.edu',
-            buttonText: 'Visit the Technique Student Portal'
-        };
-        html = pug.renderFile('./views/emailtemplate.pug', fields);
-        var message = {
-            from: 'MIT Technique <technique@mit.edu>',
-            to: req.user.email,
-            subject: 'Your Confirmed Yearbook Entry',
-            html
-        };
-        emailTransporter(message);
     } else {
         res.redirect('/signin')
     }
@@ -116,31 +130,7 @@ app.post('/confirm', (req, res, next) => {
         req.user.confirmed = true;
         req.user.save((err, updatedUser) => {
             if (err) return next(err);
-            // Send confirmation email
-            fields = {
-                title: 'Your Confirmed Yearbook Entry',
-                preheader: 'We just wanted to send you a copy of your confirmed yearbook entry.',
-                superheader: 'Hey ' + req.user.fname + ',',
-                header: 'Thank you for confirming your yearbook entry!',
-                paragraph: 'You can view and edit your yearbook entry until Feburary 28th. We have provided a copy below for your records.',
-                records: {
-                    Name: req.user.nameAsAppears,
-                    Major: req.user.major,
-                    "Second Major": req.user.major2,
-                    Minor: req.user.minor,
-                    Quote: req.user.quote
-                },
-                buttonLink: 'http://tnqportal.mit.edu',
-                buttonText: 'Visit the Technique Student Portal'
-            };
-            html = pug.renderFile('./views/emailtemplate.pug', fields);
-            var message = {
-                from: '"MIT Technique" technique@mit.edu',
-                to: req.user.email,
-                subject: 'Your Confirmed Yearbook Entry',
-                html
-            };
-            emailTransporter(message);
+            sendConfirmationEmail(updatedUser);
             res.redirect('/');
         })
     } else {

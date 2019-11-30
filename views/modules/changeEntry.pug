@@ -31,6 +31,10 @@
                 input.form-control#minor(name='minor' value=`${user.minor}` maxlength='20')
                 small#minorHelpBlock.form-text.text-muted Minor should be in abbreviated form (ex. 6-2), if applicable.
                 .form-group
+                label(for='hometown') Hometown
+                input.form-control#hometown(name='hometown' value=`${user.hometown}` maxlength='80')
+                small#quoteHelpBlock.form-text.text-muted Please limit your hometown to 80 characters.
+                .form-group
                 label(for='quote') Quote
                 textarea.form-control#quote(name='quote' maxlength='130') #{user.quote}
                 small#quoteHelpBlock.form-text.text-muted Please limit your quote to 130 characters.

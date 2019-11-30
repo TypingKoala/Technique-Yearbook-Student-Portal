@@ -3,49 +3,61 @@ var crypto = require('crypto');
 
 var StudentSchema = new mongoose.Schema({
     fname: {
-        type: String
+        type: String,
+        required: true
     },
     lname: {
-        type: String
+        type: String,
+        required: true
     },
     nameAsAppears: {
-        type: String
+        type: String,
+        required: true
     },
     email: {
         type: String,
-        unique: true
+        unique: true,
+        required: true
     },
     major: {
-        type: String
-    }, 
+        type: String,
+        default: ""
+    },
     major2: {
-        type: String
+        type: String,
+        default: ""
     },
     minor: {
-        type: String
+        type: String,
+        default: ""
+    },
+    hometown: {
+        type: String,
+        default: ""
     },
     quote: {
-        type: String
+        type: String,
+        default: ""
     },
     confirmed: {
         type: Boolean,
-        default: false
+        default: false,
+        required: true
     },
     authKey: {
         type: String,
         unique: true,
         required: true
     },
-    portraitURL: {
-        type: String
-    },
     pictured: {
         type: Boolean,
-        default: false
+        default: false,
+        required: true
     },
     editable: {
         type: Boolean,
-        default: true
+        default: true,
+        required: true
     }
 
 });
