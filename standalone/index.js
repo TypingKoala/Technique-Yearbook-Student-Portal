@@ -77,36 +77,32 @@ function sendEmails(dryRun) {
         console.log('This is a production run of the email function.')
     }
 
-    Student.find((err, students) => {
+    Student.find({pictured: true}, (err, students) => {
         if (err) {
             console.log(err);
         }
         counter = students.length; // initialize decrementing counter to track # of callbacks after each student iteration
-        emails = 0; // number of emails to send (aka non-confirmed students)
+        emails = 0; // number of emails to send
         students.forEach(student => {
-            if (dryRun && !student.confirmed) {
-                console.log(student.email);
-                emails++;
-                counter = counter - 1;
-            } else if (!student.confirmed && !student.pictured) {
-                // Send email
-                fields = {
-                    title: '[ACTION REQUIRED] Add Your Yearbook Text Entry',
-                    preheader: "It's time to write your text entry for the yearbook. You have until Wednesday night to edit and confirm your entry in order to be included in the yearbook.",
-                    superheader: 'Hey ' + student.fname + ',',
-                    header: "Looks like we missed you this year...",
-                    paragraph: "You are receiving this email because you didn't take a senior portrait for the yearbook this year. However, you still can be included in the yearbook as a text entry. Simply log into the student portal below and confirm your name spelling, major/minor information, and quote. You have until Wednesday, February 27th at 11:59pm to confirm your text entry using the link below. If you do not confirm, we will only print your first and last name as the registrar provided us. Please do not forward this email to others, because anyone with the link below will be able to change your entry.",
-                    records: {},
-                    buttonLink: 'http://tnqportal.mit.edu/authkey/' + student.authKey,
-                    buttonText: 'Visit the Technique Student Portal'
-                };
-                html = pug.renderFile('./views/emailtemplate.pug', fields);
-                var message = {
-                    from: 'Technique <technique@mit.edu>',
-                    to: student.email,
-                    subject: '[ACTION REQUIRED] Add Your Yearbook Text Entry',
-                    html
-                };
+            // Send email
+            fields = {
+                title: '[ACTION REQUIRED] Confirm your yearbook bio information',
+                preheader: "Thanks for taking your senior portrait! It's time to write your bio for Technique 2020. ",
+                superheader: 'Hey ' + student.fname + ',',
+                header: "Time to add your senior bio for Technique 2020!",
+                paragraph: "You are receiving this email because you recently attended your senior portrait session. Now that we have your photo, let's figure out what to put next to it! Simply click on the link below to confirm your name spelling, major/minor information, hometown, and quote. If you do not confirm, we will only display your first and last name as the registrar provided us. You are able to edit your entry after confirming by using the link below. Please do not forward this email to others, because anyone with the link below will be able to change your entry.",
+                records: {},
+                buttonLink: 'http://tnqportal.mit.edu/authkey/' + student.authKey,
+                buttonText: 'Login to the Technique Student Portal'
+            };
+            html = pug.renderFile('./views/emailtemplate.pug', fields);
+            var message = {
+                from: 'Technique Yearbook <technique@mit.edu>',
+                to: student.email,
+                subject: '[ACTION REQUIRED] Confirm your yearbook bio information',
+                html
+            };
+            if (!dryRun) {
                 emailTransporter(message).then(() => {
                     counter = counter - 1;
                     if (counter == 0) {
@@ -116,15 +112,16 @@ function sendEmails(dryRun) {
                 }).catch((err) => {
                     console.log(err);
                 });
-                emails++;
             } else {
-                counter = counter - 1;
+                console.log(student.email);
+                counter--;
             }
+            emails++;
             if (counter == 0) {
                 console.log("Emails sent: " + emails.toString());
                 process.exit();
             }
-            
+
         })
     })
 };
@@ -149,30 +146,29 @@ function importcsv(path) {
                 }, (err, student) => {
                     if (!student) {
                         Student.create({
-                            fname: data.FIRSTNAME,
-                            lname: data.LASTNAME,
-                            nameAsAppears: data.FIRSTNAME + ' ' + data.LASTNAME,
+                            fname: data.FirstName,
+                            lname: data.LastName,
+                            nameAsAppears: data.FirstName + ' ' + data.LastName,
                             email: data.EMAIL.toLowerCase(),
                             major: '',
                             major2: '',
                             minor: '',
                             quote: '',
-                            pictured: false,
+                            hometown: '',
+                            pictured: true,
                             authKey: crypto.randomBytes(32).toString('hex')
                         });
                         console.log('Added student: ' + data.EMAIL)
-                    // } else if (!student.confirmed) {
-                    //     student.update({
-                    //         fname: data.FIRSTNAME,
-                    //         lname: data.LASTNAME,
-                    //         nameAsAppears: data.FIRSTNAME + ' ' + data.LASTNAME,
-                    //         email: data.EMAIL.toLowerCase(),
-                    //         major: '',
-                    //         major2: '',
-                    //         minor: '',
-                    //         quote: ''
-                    //     }); // overwrite non-confirmed student with new information
-                    //     console.log('Updated student: ' + data.EMAIL)
+                    } else if (!student.pictured) {
+                        Student.updateOne({
+                                email: data.EMAIL.toLowerCase()
+                            }, {
+                                pictured: true
+                            })
+                            .then((val) => {
+                                console.log('Updated student: ' + data.EMAIL)
+                            })
+
                     } else {
                         console.log('Skipped student: ' + data.EMAIL)
                     }
@@ -208,7 +204,7 @@ function crosscheck(path) {
                     email: data.EMAIL.toLowerCase()
                 }, (err, student) => {
                     if (!student) {
-                        console.log("Student not found in databse: " + data.EMAIL.toLowerCase())
+                        console.log("Student not found in database: " + data.EMAIL.toLowerCase())
                     }
                 })
             } catch (err) {
@@ -229,4 +225,3 @@ function crosscheck(path) {
         })
     })
 }
-
