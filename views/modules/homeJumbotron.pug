@@ -43,6 +43,13 @@
                     label.col-sm-2.col-form-label(for='quote') Quote
                     .col-sm-10
                         textarea.form-control#quote.form-control-plaintext(name='quote' readonly maxlength='130') #{user.quote}
+                .form-group.row
+                    label.col-sm-2.col-form-label(for='attended') Attended Senior Portrait Session?
+                    .col-sm-10
+                        if (user.pictured)
+                            input.form-control#minor.form-control-plaintext(name='minor' readonly value=`Yes`)
+                        else
+                            input.form-control#minor.form-control-plaintext(name='minor' readonly value=`No (this may take a few weeks to update)`)
             if (user.editable)
                 form(action="/edit" method="get")
                     button.btn.btn-secondary(type="submit") Edit

@@ -9,7 +9,7 @@
                 .form-group
                 label(for='fname') First Name
                 input.form-control#fname(name='fname' value=`${user.fname}` required maxlength='200')
-                small#fnameHelpBlock.form-text.text-muted Required.
+                small#fnameHelpBlock.form-text.text-muted Required. This is how your name will be sorted in the yearbook.
                 .form-group
                 label(for='lname') Last Name
                 input.form-control#lname(name='lname' value=`${user.lname}` required maxlength='200')
@@ -17,7 +17,7 @@
                 .form-group
                 label(for='nameAsAppears') Name To Appear in the Yearbook
                 input.form-control#nameAsAppears.long-press(name='nameAsAppears' value=`${user.nameAsAppears}` required maxlength='400')
-                small#nameAsAppearsHelpBlock.form-text.text-muted Required. This will be the name printed in the yearbook. To input accented characters, hold down a letter and select the appropriate character with the arrow keys.
+                small#nameAsAppearsHelpBlock.form-text.text-muted Required. This will be how your name is printed in the yearbook. Diacritical marks and non-Latin characters are supported.
                 .form-group
                 label(for='major') Major
                 input.form-control#major(name='major' value=`${user.major}` required maxlength='20')
