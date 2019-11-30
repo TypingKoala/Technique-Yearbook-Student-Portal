@@ -28,10 +28,15 @@ html
         if success[0]
           .alert.alert-success(role='alert') #{success}
         p In order to access and edit your yearbook entry, your yearbook entry must be linked to your MIT email address. If you have any issues accessing your profile, please email us at technique@mit.edu.
-        form(action="/auth")
+        form(method="POST" action="/signin")
           .form-group
-            button.btn.btn-primary
-              span.icon.icon-mit-logo 
-              a Sign in using your MIT credentials
+            label.text-normal.text-dark MIT Email
+            input.form-control(type='email', placeholder='Email', name="email")
+          .form-group
+            p !{recaptcha}
+          .form-group
+            .peers.ai-c.jc-sb.fxw-nw
+              .peer
+                button.btn.btn-primary Send me a magic link
     script(type='text/javascript', src='vendor.js')
     script(type='text/javascript', src='bundle.js')
