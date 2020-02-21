@@ -16,7 +16,7 @@ function sendConfirmationEmail(user) {
         preheader: 'We just wanted to send you a copy of your confirmed yearbook entry.',
         superheader: 'Hey ' + user.fname + ',',
         header: 'Thank you for confirming your yearbook entry!',
-        paragraph: "You can view and edit your yearbook entry until January 31st. We have provided a copy below for your records. Do not forward this email to people you don't trust, since the link below automatically logs you in.",
+        paragraph: "You can view and edit your yearbook entry until February 24th. We have provided a copy below for your records. Do not forward this email to people you don't trust, since the link below automatically logs you in.",
         records: {
             "Name to sort by": user.fname + " " + user.lname,
             "Name to display": user.nameAsAppears,
