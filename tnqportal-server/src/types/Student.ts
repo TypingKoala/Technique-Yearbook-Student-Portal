@@ -1,3 +1,5 @@
+import jwt = require('jsonwebtoken');
+
 /** Represents the name of a user. */
 export interface IName {
     first: string;
@@ -22,6 +24,7 @@ export interface IAcademic {
 export interface IMetadata {
     confirmed: boolean;
     editable: boolean;
+    admin?: boolean;
 }
 
 /** Represents a student with an entry in the yearbook. */
@@ -78,7 +81,8 @@ export class Student implements IStudent {
         // set default metadata info and deep copy from parameter if present
         this.metadata = {
             confirmed: false,
-            editable: true
+            editable: true,
+            admin: false
         };
 
         if (student.metadata) {
@@ -99,6 +103,18 @@ export class Student implements IStudent {
         }
     }
 
-    // TODO: JWT generation
+    /**
+     * Returns the JWT for this student
+     */
+    getJWT() {
+        const options = {
+            expiresIn: "1d",
+            issuer: "tnqportal.mit.edu",
+        }
+        return jwt.sign({
+            email: this.email,
+            admin: this.metadata.admin
+        }, process.env.JWT_TOKEN_KEY, options)
+    }
 }
 

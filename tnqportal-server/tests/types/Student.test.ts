@@ -6,6 +6,7 @@
  *      has bio/doesn't have bio
  *      has academic/doesn't have academic
  *      has metadata/doesn't have metadata
+ *  toObject()
  */
 
 import { expect } from 'chai';
