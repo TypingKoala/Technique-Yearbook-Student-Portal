@@ -1,7 +1,8 @@
 import express = require('express');
 export const userRouter = express.Router();
 
-import jwt = require('express-jwt')
+import jwtVerify = require('express-jwt');
+import env = require('env-var');
 
 userRouter.get("/", (req, res) => {
     res.send("User")
@@ -9,6 +10,9 @@ userRouter.get("/", (req, res) => {
 
 import { getUserInfo } from './getUserInfo';
 userRouter.get('/getUserInfo', 
-    jwt({ secret: process.env.JWT_TOKEN_KEY }),
+    jwtVerify({
+        secret: env.get('JWT_TOKEN_KEY').required().asString(),
+        issuer: env.get('JWT_TOKEN_ISS').required().asString()
+    }),
     getUserInfo
     )

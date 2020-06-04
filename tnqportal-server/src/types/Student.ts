@@ -1,4 +1,5 @@
 import jwt = require('jsonwebtoken');
+import env = require('env-var');
 
 /** Represents the name of a user. */
 export interface IName {
@@ -108,13 +109,13 @@ export class Student implements IStudent {
      */
     getJWT() {
         const options = {
-            expiresIn: "1d",
-            issuer: "tnqportal.mit.edu",
+            expiresIn: env.get('JWT_TOKEN_EXP').asString(),
+            issuer: env.get('JWT_TOKEN_ISS').asString(),
         }
         return jwt.sign({
             email: this.email,
             admin: this.metadata.admin
-        }, process.env.JWT_TOKEN_KEY, options)
+        }, env.get('JWT_TOKEN_KEY').required().asString(), options)
     }
 }
 

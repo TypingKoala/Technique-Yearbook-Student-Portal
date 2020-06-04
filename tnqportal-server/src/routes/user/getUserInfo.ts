@@ -1,7 +1,7 @@
 import express = require('express');
 import { Student } from '../../types/Student';
 
-export function getUserInfo (req: express.Request, res: express.Response, next: express.NextFunction): void {
+export function getUserInfo (req: any, res: express.Response, next: express.NextFunction): void {
     if (res.success) {
         res.success(new Student({
             email: req.user.email,
