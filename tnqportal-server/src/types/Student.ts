@@ -48,28 +48,55 @@ export class Student implements IStudent {
      */
     constructor(student: IStudent) {
         this.email = student.email;
-        this.name = student.name;
+        this.name = { ...student.name };
 
         // check if preferred name exists, and generate one if necessary
         if (!this.name.preferred) {
             this.name.preferred = `${this.name.first} ${this.name.last}`;
         };
 
-        this.bio = student.bio || {
-            hometown: "",
+        // set default bio and deep copy from parameter if present
+        this.bio = {hometown: "",
             quote: ""
         };
 
-        this.academic = student.academic || {
+        if (student.bio) {
+            Object.assign(this.bio, student.bio)
+        }
+
+        // set default academic info and deep copy from parameter if present
+        this.academic = {
             major: "",
             major2: "",
             minor: ""
         };
 
-        this.metadata = student.metadata || {
+        if (student.academic) {
+            Object.assign(this.academic, student.academic)
+        }
+
+        // set default metadata info and deep copy from parameter if present
+        this.metadata = {
             confirmed: false,
             editable: true
         };
+
+        if (student.metadata) {
+            Object.assign(this.metadata, student.metadata)
+        }
+    };
+
+    /**
+     * Returns the student in object form
+     */
+    toObject() : IStudent {
+        return {
+            email: this.email,
+            name: this.name,
+            bio: this.bio,
+            academic: this.academic,
+            metadata: this.metadata
+        }
     }
 
     // TODO: JWT generation
