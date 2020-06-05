@@ -15,7 +15,8 @@
  *      verified with token key/not verified with token key
  */
 
-require('dotenv').config()
+import dotenv from 'dotenv';
+dotenv.config();
 
 import { expect } from 'chai';
 import env = require('env-var');

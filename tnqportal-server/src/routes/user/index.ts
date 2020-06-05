@@ -9,7 +9,7 @@ userRouter.get("/", (req, res) => {
 })
 
 import { getUserInfo } from './getUserInfo';
-userRouter.get('/getUserInfo', 
+userRouter.get('/getUserInfo',
     jwtVerify({
         secret: env.get('JWT_TOKEN_KEY').required().asString(),
         issuer: env.get('JWT_TOKEN_ISS').required().asString()
