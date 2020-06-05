@@ -7,7 +7,8 @@
     "test": "mocha -r ts-node/register tests/**/*.test.ts",
     "start": "tsc && node dist/src/app.js",
     "watch": "tsc --watch",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "clean": "rm -rf dist"
   },
   "author": "Johnny Bui",
   "license": "MIT",

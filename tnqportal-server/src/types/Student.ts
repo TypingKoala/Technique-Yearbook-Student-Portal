@@ -1,5 +1,6 @@
 import jwt = require('jsonwebtoken');
 import env = require('env-var');
+import assert = require('assert');
 
 /** Represents the name of a user. */
 export interface IName {
@@ -37,13 +38,24 @@ export interface IStudent{
     metadata?: IMetadata;
 }
 
-/** Implements a student with an entry in the yearbook. */
+/**
+ * Implements a student with an entry in the yearbook.
+ *
+ * Students have a non-empty first/last/preferred name, and email with the form 'kerberos@mit.edu'
+ */
 export class Student implements IStudent {
     email: string;
     name: IName;
     bio: IBio;
     academic: IAcademic;
     metadata: IMetadata;
+
+    checkRep() {
+        assert(this.email.match('^(.*)(@mit.edu)$'), 'valid MIT email required');
+        assert(this.name.first.length > 0, 'non-empty first name required');
+        assert(this.name.last.length > 0, 'non-empty last name required');
+        assert(this.name.preferred && this.name.preferred.length > 0, 'non-empty preferred name required');
+    }
 
     /**
      * Create a student with email and name.
@@ -89,12 +101,16 @@ export class Student implements IStudent {
         if (student.metadata) {
             Object.assign(this.metadata, student.metadata)
         }
+
+        this.checkRep();
     };
 
     /**
      * Returns the student in object form
      */
     toObject() : IStudent {
+        this.checkRep();
+
         return {
             email: this.email,
             name: this.name,
@@ -105,9 +121,14 @@ export class Student implements IStudent {
     }
 
     /**
-     * Returns the JWT for this student
+     * Returns a signed JWT for this student suitable for authentication.
+     *
+     * The body of the JWT contains the email and admin flag of the student. The issuer,
+     * expiration, and signing key are also included and specified as environment variables.
      */
     getJWT() {
+        this.checkRep();
+
         const options = {
             expiresIn: env.get('JWT_TOKEN_EXP').asString(),
             issuer: env.get('JWT_TOKEN_ISS').asString(),
