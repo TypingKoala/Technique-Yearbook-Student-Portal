@@ -8,11 +8,19 @@ userRouter.get("/", (req, res) => {
     res.send("User")
 })
 
-import { getUserInfo } from './getUserInfo';
-userRouter.get('/getUserInfo',
+import { userInfoGet, userInfoPost } from './userInfo';
+userRouter.get('/userInfo',
     jwtVerify({
         secret: env.get('JWT_TOKEN_KEY').required().asString(),
         issuer: env.get('JWT_TOKEN_ISS').required().asString()
     }),
-    getUserInfo
+    userInfoGet
+    )
+
+userRouter.post('/userInfo',
+    jwtVerify({
+        secret: env.get('JWT_TOKEN_KEY').required().asString(),
+        issuer: env.get('JWT_TOKEN_ISS').required().asString()
+    }),
+    userInfoPost
     )

@@ -21,10 +21,11 @@ export function sendMagicLink (req: express.Request, res: express.Response, next
     }
     const metadata: IMetadata = {
         confirmed: true,
-        editable: false
+        editable: false,
+        admin: true
     }
     const student = new Student({
-        email: "hello@mit.edu",
+        email: "jbui@mit.edu",
         name,
         bio,
         academic,
