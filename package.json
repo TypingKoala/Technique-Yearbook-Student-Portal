@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/TypingKoala/Technique-Yearbook-Student-Portal#readme",
   "devDependencies": {
-    "aws-sdk": "^2.368.0"
+    "aws-sdk": "^2.814.0"
   },
   "dependencies": {
     "@sentry/node": "^4.4.1",
