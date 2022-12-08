@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@sentry/node": "^4.4.1",
-    "body-parser": "^1.18.3",
+    "body-parser": "^1.20.1",
     "commander": "^2.19.0",
     "connect-flash": "^0.1.1",
     "connect-mongo": "^2.0.2",
@@ -31,7 +31,7 @@
     "csv-parser": "^2.3.2",
     "dateformat": "^3.0.3",
     "dotenv": "^6.1.0",
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "express-csv": "^0.6.0",
     "express-flash": "0.0.2",
     "express-recaptcha": "^5.0.1",
